@@ -4,6 +4,8 @@ Ce module n'est importé que si torch est installé (voir config.has_torch).
 """
 from __future__ import annotations
 
+import copy
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -26,16 +28,47 @@ class LSTMNet(nn.Module):
         return self.head(torch.cat([hn[-1], e], dim=1)).squeeze(1)
 
 
-def train_lstm(X, E, y, seed: int, epochs: int = 60, lr: float = 3e-3, batch_size: int = 128, hidden: int = 32):
+def train_lstm(
+    X,
+    E,
+    y,
+    seed: int,
+    epochs: int = 60,
+    lr: float = 3e-3,
+    batch_size: int = 128,
+    hidden: int = 32,
+    X_val=None,
+    E_val=None,
+    y_val=None,
+    weight_decay: float = 1e-4,
+    grad_clip: float = 1.0,
+    patience: int = 10,
+    return_best_epoch: bool = False,
+):
     torch.manual_seed(seed)
     Xt = torch.tensor(X, dtype=torch.float32)
     Et = torch.tensor(E, dtype=torch.float32)
     yt = torch.tensor(y, dtype=torch.float32)
     net = LSTMNet(X.shape[2], E.shape[1], hidden)
-    opt = torch.optim.Adam(net.parameters(), lr=lr)
+    opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=weight_decay)
     loss_fn = nn.MSELoss()
     n = len(Xt)
-    for _ in range(epochs):
+
+    use_es = X_val is not None and E_val is not None and y_val is not None and len(X_val) > 0
+    if use_es:
+        sched = torch.optim.lr_scheduler.ReduceLROnPlateau(opt, mode="min", factor=0.5, patience=4)
+        Xv = torch.tensor(X_val, dtype=torch.float32)
+        Ev = torch.tensor(E_val, dtype=torch.float32)
+        yv = torch.tensor(y_val, dtype=torch.float32)
+        best_val = float("inf")
+        best_state = copy.deepcopy(net.state_dict())
+        best_epoch = epochs
+        no_imp = 0
+    else:
+        sched = None
+        best_epoch = epochs
+
+    for ep in range(1, epochs + 1):
         net.train()
         perm = torch.randperm(n)
         for k in range(0, n, batch_size):
@@ -43,12 +76,31 @@ def train_lstm(X, E, y, seed: int, epochs: int = 60, lr: float = 3e-3, batch_siz
             opt.zero_grad()
             loss = loss_fn(net(Xt[idx], Et[idx]), yt[idx])
             loss.backward()
+            if grad_clip > 0:
+                nn.utils.clip_grad_norm_(net.parameters(), grad_clip)
             opt.step()
+        if use_es:
+            net.eval()
+            with torch.no_grad():
+                vloss = float(loss_fn(net(Xv, Ev), yv).item())
+            sched.step(vloss)
+            if vloss < best_val - 1e-5:
+                best_val = vloss
+                best_state = copy.deepcopy(net.state_dict())
+                best_epoch = ep
+                no_imp = 0
+            else:
+                no_imp += 1
+                if no_imp >= patience:
+                    break
+    if use_es:
+        net.load_state_dict(best_state)
     net.eval()
-    return net
+    return (net, best_epoch) if return_best_epoch else net
 
 
 def predict_lstm(net, X, E) -> np.ndarray:
+    net.eval()
     with torch.no_grad():
         return net(torch.tensor(X, dtype=torch.float32), torch.tensor(E, dtype=torch.float32)).numpy()
 
