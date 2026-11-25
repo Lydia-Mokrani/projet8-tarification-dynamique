@@ -1,6 +1,7 @@
 """Agent Réputation : Transformer (analyse d'avis) + Naive Bayes (baseline)."""
 from __future__ import annotations
 
+import os
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -36,7 +37,7 @@ class TransformerSentiment:
     def fit(self, texts, y):
         if self.backend == "torch":
             from transformers import pipeline
-            self.pipe = pipeline("sentiment-analysis", model=HF_MODEL, truncation=True)
+            self.pipe = pipeline("sentiment-analysis", model=os.environ.get("REP_MODEL", HF_MODEL), truncation=True)
         else:
             self.vec = TfidfVectorizer(ngram_range=(1, 2), min_df=2)
             self.clf = LogisticRegression(max_iter=1000)
