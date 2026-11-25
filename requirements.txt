@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.3
+matplotlib>=3.7
+torch>=2.1          # LSTM (agent Demande) et CNN (agent Vision)
+transformers>=4.40  # Transformer (agent Réputation)
+streamlit>=1.30     # démonstration interactive (optionnel)

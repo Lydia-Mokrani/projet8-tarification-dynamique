@@ -1,0 +1,112 @@
+{
+  "config": {
+    "seed": 42,
+    "n_products": 60,
+    "n_weeks": 104,
+    "test_weeks": 12
+  },
+  "backends": {
+    "demande": "LSTM",
+    "reputation": "torch"
+  },
+  "reputation_classifieurs": {
+    "naive_bayes": {
+      "accuracy": 0.9516924088070983,
+      "f1": 0.9596928982725528
+    },
+    "transformer[torch]": {
+      "accuracy": 0.8851462372658561,
+      "f1": 0.8988861565167077
+    }
+  },
+  "reputation_qualite": {
+    "correlation_rep_estimee_vs_vraie": 0.5049437055689249
+  },
+  "prevision_demande": {
+    "MAPE_LSTM": 0.08795984564916523,
+    "MAPE_ridge": 0.08785870283548217,
+    "MAPE_naive": 0.12118423162135741
+  },
+  "segmentation": {
+    "cv_accuracy_decision_tree": 0.7333333333333333,
+    "cv_accuracy_random_forest": 0.8333333333333333
+  },
+  "elasticite": {
+    "elasticite_MAE_regression": 0.16596242366733113,
+    "elasticite_MAE_apres_shrinkage": 0.16596242366733113,
+    "elasticite_correlation": 0.9183534494504152
+  },
+  "regles_arbre": "|--- volatilite_ventes <= 0.23\n|   |--- freq_promos <= 0.26\n|   |   |--- prix_vs_concurrent <= 1.01\n|   |   |   |--- class: 0\n|   |   |--- prix_vs_concurrent >  1.01\n|   |   |   |--- class: 0\n|   |--- freq_promos >  0.26\n|   |   |--- log_prix <= 3.59\n|   |   |   |--- class: 1\n|   |   |--- log_prix >  3.59\n|   |   |   |--- class: 0\n|--- volatilite_ventes >  0.23\n|   |--- log_prix <= 3.89\n|   |   |--- class: 1\n|   |--- log_prix >  3.89\n|   |   |--- class: 1\n",
+  "importances_rf": {
+    "volatilite_ventes": 0.2838121994915339,
+    "cat_electronique": 0.1131620147657591,
+    "log_prix": 0.0888825871475313,
+    "log_volume": 0.08058009642786527,
+    "taux_marge": 0.07657053566574669,
+    "freq_promos": 0.07613149427779442,
+    "prix_vs_concurrent": 0.0717011344191581,
+    "cat_epicerie": 0.07142633078025772,
+    "reputation_moy": 0.054278287253071655,
+    "cat_maison": 0.04301492256758947,
+    "cat_mode": 0.027421482377283344,
+    "cat_beaute": 0.013018914826408899
+  },
+  "backtest": {
+    "statique": {
+      "marge_totale": 1117890.6258751205,
+      "chiffre_affaires": 2749449.4479739405,
+      "unites": 65437.50849823209,
+      "gain_marge_vs_statique_%": 0.0
+    },
+    "alignement_concurrent": {
+      "marge_totale": 1074218.6253471074,
+      "chiffre_affaires": 2734958.656541225,
+      "unites": 66667.84861532948,
+      "gain_marge_vs_statique_%": -3.906643415479516
+    },
+    "multi_agents": {
+      "marge_totale": 1141964.9934690315,
+      "chiffre_affaires": 2734512.5138133615,
+      "unites": 64562.46924350042,
+      "gain_marge_vs_statique_%": 2.153553043265277
+    },
+    "oracle": {
+      "marge_totale": 1147066.884114788,
+      "chiffre_affaires": 2739533.4360281345,
+      "unites": 64599.825679415764,
+      "gain_marge_vs_statique_%": 2.609938536413381
+    }
+  },
+  "backtest_par_categorie": [
+    {
+      "categorie": "beaute",
+      "n": 15,
+      "gain_%_multi_agents": 4.86,
+      "gain_%_alignement": 0.18
+    },
+    {
+      "categorie": "electronique",
+      "n": 12,
+      "gain_%_multi_agents": -1.63,
+      "gain_%_alignement": -5.0
+    },
+    {
+      "categorie": "epicerie",
+      "n": 10,
+      "gain_%_multi_agents": -2.23,
+      "gain_%_alignement": -12.39
+    },
+    {
+      "categorie": "maison",
+      "n": 17,
+      "gain_%_multi_agents": 7.54,
+      "gain_%_alignement": 2.49
+    },
+    {
+      "categorie": "mode",
+      "n": 6,
+      "gain_%_multi_agents": -3.01,
+      "gain_%_alignement": -6.97
+    }
+  ]
+}
