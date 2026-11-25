@@ -1,0 +1,44 @@
+{
+  "base (shrink=0, plafond=1.05)": {
+    "gain_multi_agents_moyen_%": -0.9528003175803956,
+    "gain_alignement_concurrent_moyen_%": -5.109726446074491,
+    "gain_oracle_moyen_%": -0.3768494474871664,
+    "ecart_type_multi_agents": 1.062111056990856,
+    "multi_agents_par_graine": [
+      -1.6,
+      -1.69,
+      1.04,
+      -0.75,
+      -1.76
+    ],
+    "MAE_elasticite": 0.1761540082136382
+  },
+  "shrink=0.5": {
+    "gain_multi_agents_moyen_%": -0.8019393120755103,
+    "gain_alignement_concurrent_moyen_%": -5.109726446074491,
+    "gain_oracle_moyen_%": -0.3768494474871664,
+    "ecart_type_multi_agents": 1.048521083215963,
+    "multi_agents_par_graine": [
+      -1.53,
+      -1.48,
+      1.23,
+      -0.82,
+      -1.41
+    ],
+    "MAE_elasticite": 0.1768255368242066
+  },
+  "plafond concurrent=1.15": {
+    "gain_multi_agents_moyen_%": 4.820428233954642,
+    "gain_alignement_concurrent_moyen_%": -5.109726446074491,
+    "gain_oracle_moyen_%": 5.5667987997953405,
+    "ecart_type_multi_agents": 0.8428479737223142,
+    "multi_agents_par_graine": [
+      4.13,
+      5.29,
+      4.97,
+      6.05,
+      3.67
+    ],
+    "MAE_elasticite": 0.1761540082136382
+  }
+}
