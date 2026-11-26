@@ -1,0 +1,61 @@
+{
+  "test_weeks": [
+    92,
+    104
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "demand_backend": "torch",
+  "reputation_backend": "light",
+  "per_seed": [
+    {
+      "seed": 1,
+      "LSTM": 0.08346,
+      "Ridge": 0.08965,
+      "Naive": 0.13698
+    },
+    {
+      "seed": 2,
+      "LSTM": 0.08742,
+      "Ridge": 0.09031,
+      "Naive": 0.13132
+    },
+    {
+      "seed": 3,
+      "LSTM": 0.08475,
+      "Ridge": 0.08927,
+      "Naive": 0.13712
+    },
+    {
+      "seed": 4,
+      "LSTM": 0.08008,
+      "Ridge": 0.08991,
+      "Naive": 0.13543
+    },
+    {
+      "seed": 5,
+      "LSTM": 0.08529,
+      "Ridge": 0.08949,
+      "Naive": 0.12981
+    }
+  ],
+  "summary": {
+    "LSTM": {
+      "mean": 0.08420,
+      "std": 0.00242
+    },
+    "Ridge": {
+      "mean": 0.08972,
+      "std": 0.00036
+    },
+    "Naive": {
+      "mean": 0.13413,
+      "std": 0.00301
+    }
+  }
+}
